@@ -1,33 +1,19 @@
 #!/bin/bash
 
-################# Mejoras Implementadas ####################
-# 1. Verificación de dependencias mejorada
-# 2. Manejo de rutas Java más robusto
-# 3. Validación de estructura de proyecto Android
-# 4. Mejor manejo de errores y limpieza
-# 5. Compatibilidad con diferentes estructuras de proyecto
-# 6. Optimización de pasos de compilación
-
-# Configuración inicial
 set -euo pipefail
 trap 'echo "Error en línea $LINENO. Código de salida: $?" >&2; exit 1' ERR
 
-# Colores para mejor legibilidad
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
 
-
-
-# Dependencias necesarias según Android CLI tools
 REQUIRED_TOOLS=("aapt2" "javac" "zip" "unzip")
 ANDROID_JAR="android.jar"
 ZIPALIGN="zipalign"
 APKSIGNER="apksigner"
 
-# Verificar e instalar dependencias faltantes
 check_dependencies() {
     local missing=()
     for tool in "${REQUIRED_TOOLS[@]}"; do
@@ -43,7 +29,6 @@ check_dependencies() {
     fi
 }
 
-# Configuración de directorios
 setup_directories() {
     SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
     PROJECT_DIR="${1:-}"
@@ -97,7 +82,6 @@ setup_java_environment() {
     echo -e "${GREEN}Usando Java: $(javac -version 2>&1)${NC}"
 }
 
-# Compilar recursos con aapt2
 compile_resources() {
     echo -e "${YELLOW}Compilando recursos con aapt2...${NC}"
     
@@ -117,7 +101,6 @@ compile_resources() {
     }
 }
 
-# Enlazar recursos con aapt2
 link_resources() {
     echo -e "${YELLOW}Enlazando recursos con aapt2...${NC}"
     
@@ -139,7 +122,6 @@ link_resources() {
     }
 }
 
-# Compilar código Java
 compile_java() {
     echo -e "${YELLOW}Compilando código Java...${NC}"
     
@@ -169,7 +151,6 @@ compile_java() {
     }
 }
 
-# Convertir a formato DEX
 convert_to_dex() {
     echo -e "${YELLOW}Convirtiendo a DEX...${NC}"
     # Usar d8 en lugar de dx despues 
@@ -250,5 +231,4 @@ main() {
     aapt dump badging "$BUILD_DIR/final.apk" | grep -E "package:|launchable-activity:"
 }
 
-# Ejecutar función principal
 main "$@"
